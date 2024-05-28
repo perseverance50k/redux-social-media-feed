@@ -1,0 +1,7 @@
+It's important to note that the component will re-render any time the value returned from useSelector
+changes to a new reference. Components should always try to select the smallest possible amount of data
+they need from the store, which will help ensure that it only renders when it actually needs to.
+
+If an action needs to contain a unique ID or some other random value, always generate that first and put
+it in the action object. Reducers should never calculate random values, because that makes the results
+unpredictable.

@@ -2,17 +2,15 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
-import { postUpdated } from './postsSlice'
+import { postUpdated, selectPostById } from './postsSlice'
 
 export const EditPostForm = ({ match }) => {
   const { postId } = match.params
 
-  const post = useSelector((state) =>
-    state.posts.find((post) => post.id === postId),
-  )
+  const post = useSelector((state) => selectPostById(state, postId))
 
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
+  const [title, setTitle] = useState(post.title)
+  const [content, setContent] = useState(post.content)
 
   const dispatch = useDispatch()
   const history = useHistory()
@@ -42,8 +40,8 @@ export const EditPostForm = ({ match }) => {
         />
         <label htmlFor="postContent">Post Content</label>
         <textarea
-          id="postTitle"
-          name="postTitle"
+          id="postContent"
+          name="postContent"
           value={content}
           onChange={contentChangeHandler}
         />

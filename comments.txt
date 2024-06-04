@@ -32,3 +32,31 @@ But, like any abstraction, it's not something you should do all the time, everyw
 more code to understand and maintain. Don't feel like you need to write selectors for every single field
 of your state. Try starting without any selectors, and add some later when you find yourself looking up
 the same values in many parts of your application code.
+
+===
+
+Thunk Arguments
+
+If you look at our fetchNotifications thunk, it has something new that we haven't seen before. Let's talk about thunk arguments for a minute.
+
+async (_, { getState }) => {
+  const notifications = selectAllNotifications(getState())
+  const [latestNotification] = notifications
+  const latestTimestamp = latestNotification ? latestNotification.date : ''
+
+  const response = await client.get(
+    `/fakeApi/notifications?since=${latestTimestamp}`,
+  )
+
+  return response.data
+},
+
+We've already seen that we can pass an argument into a thunk action creator when we dispatch it, like dispatch(addPost(newPost)). For createAsyncThunk specifically, you can only pass in one argument, and whatever we pass in becomes the first argument of the payload creation callback.
+
+The second argument to our payload creator is a thunkAPI object containing several useful functions and pieces of information:
+
+- dispatch and getState: the actual dispatch and getState methods from our Redux store. You can use these inside the thunk to dispatch more actions, or get the latest Redux store state (such as reading an updated value after another action is dispatched).
+- extra: the "extra argument" that can be passed into the thunk middleware when creating the store. This is typically some kind of API wrapper, such as a set of functions that know how to make API calls to your application's server and return data, so that your thunks don't have to have all the URLs and query logic directly inside.
+- requestId: a unique random ID value for this thunk call. Useful for tracking status of an individual request.
+- signal: An AbortController.signal function that can be used to cancel an in-progress request.
+- rejectWithValue: a utility that helps customize the contents of a rejected action if the thunk receives an error.

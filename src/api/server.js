@@ -202,14 +202,11 @@ export const handlers = [
     await delay(ARTIFICIAL_DELAY_MS)
     return HttpResponse.json(serializePost(updatedPost))
   }),
-  http.get('/fakeApi/notifications', async () => {
+  http.get('/fakeApi/notifications', async ({ request }) => {
     const numNotifications = getRandomInt(1, 5)
+    const since = request.url.split('since=')[1]
 
-    let notifications = generateRandomNotifications(
-      undefined,
-      numNotifications,
-      db,
-    )
+    let notifications = generateRandomNotifications(since, numNotifications, db)
 
     await delay(ARTIFICIAL_DELAY_MS)
     return HttpResponse.json(notifications)

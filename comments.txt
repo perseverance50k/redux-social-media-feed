@@ -81,3 +81,19 @@ Whatever those input selectors return becomes the arguments for the output selec
 ===
 
 React.memo() will ensure that the component inside of it only re-renders if the props have actually changed.
+
+===
+
+Normalizing Data
+You've seen that a lot of our logic has been looking up items by their ID field. Since we've been storing our data in arrays, that
+means we have to loop over all the items in the array using array.find() until we find the item with the ID we're looking for.
+
+Realistically, this doesn't take very long, but if we had arrays with hundreds or thousands of items inside, looking through the entire
+array to find one item becomes wasted effort. What we need is a way to look up a single item based on its ID, directly, without having
+to check all the other items. This process is known as "normalization".
+
+"Normalized state" means that:
+
+- We only have one copy of each particular piece of data in our state, so there's no duplication
+- Data that has been normalized is kept in a lookup table, where the item IDs are the keys, and the items themselves are the values.
+- There may also be an array of all of the IDs for a particular item type

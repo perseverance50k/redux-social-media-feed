@@ -60,3 +60,24 @@ The second argument to our payload creator is a thunkAPI object containing sever
 - requestId: a unique random ID value for this thunk call. Useful for tracking status of an individual request.
 - signal: An AbortController.signal function that can be used to cancel an in-progress request.
 - rejectWithValue: a utility that helps customize the contents of a rejected action if the thunk receives an error.
+
+===
+
+Memoizing Selector Functions
+
+Reselect is a library for creating memoized selector functions, and was specifically designed to be used with Redux. It has a createSelector
+function that generates memoized selectors that will only recalculate results when the inputs change. Redux Toolkit exports
+the createSelector function, so we already have it available.
+
+export const selectPostsByUser = createSelector(
+  [selectAllPosts, (state, userId) => userId],
+  (posts, userId) => posts.filter(post => post.user === userId)
+)
+
+createSelector takes one or more "input selector" functions as argument, plus an "output selector" function. When we call 
+selectPostsByUser(state, userId), createSelector will pass all of the arguments into each of our input selectors.
+Whatever those input selectors return becomes the arguments for the output selector.
+
+===
+
+React.memo() will ensure that the component inside of it only re-renders if the props have actually changed.
